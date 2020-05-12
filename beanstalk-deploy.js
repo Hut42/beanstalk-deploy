@@ -160,32 +160,6 @@ function deployNewVersion(application, environmentName, versionLabel, versionDes
             console.log(`No environment name given, so exiting now without deploying the new version ${versionLabel} anywhere.`);
             process.exit(0);
         }
-        deployStart = new Date();
-        console.log(`Starting deployment of version ${versionLabel} to environment ${environmentName}`);
-        return deployBeanstalkVersion(application, environmentName, versionLabel, waitForRecoverySeconds);
-    }).then(result => {
-        expect(200, result);
-
-        if (waitUntilDeploymentIsFinished) {
-            console.log('Deployment started, "wait_for_deployment" was true...\n');
-            return waitForDeployment(application, environmentName, versionLabel, deployStart, waitForRecoverySeconds);
-        } else {
-            console.log('Deployment started, parameter "wait_for_deployment" was false, so action is finished.');
-            console.log('**** IMPORTANT: Please verify manually that the deployment succeeds!');
-            process.exit(0);
-        }
-
-    }).then(envAfterDeployment => {
-        if (envAfterDeployment.Health === 'Green') {
-            console.log('Environment update successful!');
-            process.exit(0);
-        } else {
-            console.warn(`Environment update finished, but environment health is: ${envAfterDeployment.Health}, HealthStatus: ${envAfterDeployment.HealthStatus}`);
-            process.exit(1);
-        }
-    }).catch(err => {
-        console.error(`Deployment failed: ${err}`);
-        process.exit(2);
     }); 
 }
 
